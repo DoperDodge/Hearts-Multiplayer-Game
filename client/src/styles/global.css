@@ -1,0 +1,267 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Variables (Pixel Theme) ──────────────────────── */
+:root {
+  --color-bg: #1a1a2e;
+  --color-surface: #16213e;
+  --color-panel: #0f3460;
+  --color-accent: #e94560;
+  --color-gold: #f5c542;
+  --color-green: #4ecca3;
+  --color-text: #eaeaea;
+  --color-muted: #8b8b8b;
+  --color-hearts: #e94560;
+  --color-diamonds: #4ecdc4;
+  --color-clubs: #45b7d1;
+  --color-spades: #c5c6c7;
+
+  --font-pixel: 'Press Start 2P', monospace;
+  --border-pixel: 3px solid;
+}
+
+/* ── Reset & Base ─────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Pixel Art Rendering ──────────────────────────────── */
+img, canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ── Scrollbar Styling ────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-panel);
+  border: 2px solid var(--color-surface);
+}
+
+/* ── Selection ────────────────────────────────────────── */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-text);
+}
+
+/* ── Pixel Button Base ────────────────────────────────── */
+.pixel-btn {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 12px 24px;
+  border: 3px solid;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pixel-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+
+.pixel-btn:hover {
+  transform: translate(-1px, -1px);
+}
+
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+}
+
+.pixel-btn:active::after {
+  transform: translate(-2px, -2px);
+}
+
+.pixel-btn-primary {
+  background: var(--color-accent);
+  color: white;
+  border-color: #c73a50;
+}
+
+.pixel-btn-secondary {
+  background: var(--color-panel);
+  color: var(--color-text);
+  border-color: #0a2540;
+}
+
+.pixel-btn-gold {
+  background: var(--color-gold);
+  color: #1a1a2e;
+  border-color: #d4a833;
+}
+
+.pixel-btn-green {
+  background: var(--color-green);
+  color: #1a1a2e;
+  border-color: #3db892;
+}
+
+.pixel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Pixel Panel ──────────────────────────────────────── */
+.pixel-panel {
+  background: var(--color-surface);
+  border: 3px solid var(--color-panel);
+  padding: 16px;
+  position: relative;
+}
+
+.pixel-panel::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Pixel Input ──────────────────────────────────────── */
+.pixel-input {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 10px 14px;
+  background: var(--color-bg);
+  border: 3px solid var(--color-panel);
+  color: var(--color-text);
+  outline: none;
+  width: 100%;
+}
+
+.pixel-input:focus {
+  border-color: var(--color-accent);
+}
+
+.pixel-input::placeholder {
+  color: var(--color-muted);
+}
+
+/* ── Card Styles ──────────────────────────────────────── */
+.card {
+  width: 70px;
+  height: 100px;
+  border-radius: 4px;
+  border: 2px solid #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+  position: relative;
+  background: #f5f0e8;
+}
+
+.card.hearts, .card.diamonds {
+  color: var(--color-hearts);
+}
+
+.card.clubs, .card.spades {
+  color: #2d2d3d;
+}
+
+.card:hover:not(.disabled) {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.card.selected {
+  transform: translateY(-16px);
+  box-shadow: 0 0 0 3px var(--color-gold), 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+.card.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.card.face-down {
+  background: linear-gradient(135deg, var(--color-panel) 25%, #0a2540 75%);
+  border-color: var(--color-panel);
+}
+
+.card-back-pattern {
+  width: 100%;
+  height: 100%;
+  background:
+    repeating-conic-gradient(var(--color-accent) 0% 25%, transparent 0% 50%) 50% / 12px 12px;
+  opacity: 0.3;
+  border-radius: 2px;
+}
+
+/* ── Animations ───────────────────────────────────────── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+@keyframes scorePopup {
+  0% { opacity: 0; transform: translateY(0) scale(0.8); }
+  50% { opacity: 1; transform: translateY(-20px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-40px) scale(1); }
+}
+
+.animate-slide-up { animation: slideUp 0.3s ease-out; }
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
+.animate-shake { animation: shake 0.3s ease-out; }
+.animate-score-popup { animation: scorePopup 1.5s ease-out forwards; }

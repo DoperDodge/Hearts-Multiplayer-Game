@@ -1,0 +1,15 @@
+{
+  "name": "pixel-hearts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+    "build": "cd client && npm run build && cd ../server && npm run build",
+    "start": "cd server && npm start",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "clean": "rm -rf client/dist server/dist node_modules client/node_modules server/node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
