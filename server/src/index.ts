@@ -2,8 +2,8 @@
 // PIXEL HEARTS — Server Entry Point
 // ============================================================
 
-// Register tsconfig path aliases for runtime resolution
-import 'tsconfig-paths/register';
+// Register tsconfig path aliases for runtime resolution (dev only)
+try { require('tsconfig-paths/register'); } catch { }
 
 import express from 'express';
 import { createServer } from 'http';
@@ -35,11 +35,11 @@ app.get('/health', (_req, res) => {
 
 // Serve static client build in production
 if (NODE_ENV === 'production') {
-  const clientPath = path.join(__dirname, '../../client/dist');
-  app.use(express.static(clientPath));
-  app.get('*', (_req, res) => {
-    res.sendFile(path.join(clientPath, 'index.html'));
-  });
+    const clientPath = path.resolve('/app/client/dist');
+    app.use(express.static(clientPath));
+    app.get('*', (_req, res) => {
+        res.sendFile(path.join(clientPath, 'index.html'));
+    });
 }
 
 // ── HTTP + WebSocket Server ──────────────────────────────
