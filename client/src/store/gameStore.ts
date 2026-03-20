@@ -15,6 +15,7 @@ import {
 } from '../game-logic/rules';
 import { scoreHand, applyMoonScoring, isGameOver, getWinner } from '../game-logic/scoring';
 import { chooseBotPassCards, chooseBotPlay, getBotDelay } from '../game-logic/bot-ai';
+import { wsClient } from '../network/WebSocketClient';
 
 export interface PlayerData {
   id: string;
@@ -388,7 +389,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   confirmPass: () => {
     const state = get();
-    if (state.selectedPassCards.length !== 3) return;
+      if (state.selectedPassCards.length !== 3) return;
+
+      // Multiplayer: send to server and let server handle it
+      if (state.isMultiplayer) {
+          wsClient.send({ type: 'PASS_CARDS', cardIds: state.selectedPassCards });
+          set({ selectedPassCards: [], message: 'Waiting for other players...' });
+          return;
+      }
 
     const players = state.players.map(p => ({ ...p, hand: [...p.hand] }));
     const passMap = new Map<number, Card[]>();
@@ -425,13 +433,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
     setTimeout(() => _startPlayPhase(get, set), 500);
   },
 
-  playCard: (cardId) => {
-    const state = get();
-    if (state.phase !== GamePhase.PLAYING) return;
-    if (state.currentPlayerIndex !== state.humanPlayerIndex) return;
-    if (!state.legalMoves.includes(cardId)) return;
-    _executePlay(get, set, state.humanPlayerIndex, cardId);
-  },
+    playCard: (cardId) => {
+        const state = get();
+        if (state.phase !== GamePhase.PLAYING) return;
+        if (state.currentPlayerIndex !== state.humanPlayerIndex) return;
+        if (!state.legalMoves.includes(cardId)) return;
+
+        // Multiplayer: send to server
+        if (state.isMultiplayer) {
+            wsClient.send({ type: 'PLAY_CARD', cardId });
+            set({ legalMoves: [], message: '' });
+            return;
+        }
+
+        _executePlay(get, set, state.humanPlayerIndex, cardId);
+    },
 
   reset: () => {
     set({

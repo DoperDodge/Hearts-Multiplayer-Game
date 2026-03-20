@@ -14,6 +14,7 @@ import { GameView } from './components/game/GameView';
 import { ToastContainer } from './components/shared/Toast';
 import { useGameStore } from './store/gameStore';
 import { useSettingsStore } from './store/settingsStore';
+import { useMultiplayerGame } from './hooks/useMultiplayerGame';
 import { BotDifficulty } from '@shared/game-types';
 
 type Screen =
@@ -27,11 +28,14 @@ type Screen =
   | 'game';
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>('mainMenu');
-  const { playerName } = useSettingsStore();
-  const { startSoloGame, reset } = useGameStore();
+    const [screen, setScreen] = useState<Screen>('mainMenu');
+    const { playerName } = useSettingsStore();
+    const { startSoloGame, reset } = useGameStore();
 
-  const handlePlay = useCallback(() => {
+    // Listen for multiplayer game messages from the server
+    useMultiplayerGame();
+
+    const handlePlay = useCallback(() => {
     if (playerName) {
       setScreen('modeSelect');
     } else {
