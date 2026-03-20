@@ -21,18 +21,22 @@ export function useMultiplayerGame() {
       const myId = useLobbyStore.getState().myPlayerId;
 
       // Build player list from server positions
-      const players = msg.playerPositions.map((p: any) => ({
-        id: p.id,
-        name: p.name,
-        position: p.position as PlayerPosition,
-        hand: [] as Card[],
-        tricksWon: [] as any[],
-        score: 0,
-        totalScore: 0,
-        isBot: false,
-        avatar: p.avatar || 0,
-        cardCount: 13,
-      }));
+        const existingPlayers = useGameStore.getState().players;
+        const players = msg.playerPositions.map((p: any) => {
+            const existing = existingPlayers.find((ep: any) => ep.id === p.id);
+            return {
+                id: p.id,
+                name: p.name,
+                position: p.position as PlayerPosition,
+                hand: [] as Card[],
+                tricksWon: [] as any[],
+                score: 0,
+                totalScore: existing?.totalScore || 0,
+                isBot: false,
+                avatar: p.avatar || 0,
+                cardCount: 13,
+            };
+        });
 
       // Find our player index and set our hand
       const humanIdx = players.findIndex((p: any) => p.id === myId);
